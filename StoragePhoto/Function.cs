@@ -27,7 +27,8 @@ namespace StoragePhoto
 
             // create new Id to upload data to storage 
             var newId = Guid.NewGuid();
-            var blobName = $"{newId}.jpg";  // hardcoded for now TODO: get file extention 
+            var BlobExtentionName = Path.GetExtension(request.Name) ?? "jpg"; // jpg as a catch all // Review: what's best practice? 
+            var blobName = $"{newId}.{BlobExtentionName}";  
 
             // Check if item exitsts & get storage area name
             // Get the file size of the photo to upload 
@@ -40,7 +41,7 @@ namespace StoragePhoto
             await CloudBlockBlob.UploadFromByteArrayAsync(photoBytes, 0, photoBytes.Length);
 
             // enter log info for analytics 
-            logger?.LogInformation($"successfully Uploaded {newId}.jpg file");
+            logger?.LogInformation($"successfully Uploaded {newId}.{BlobExtentionName} file");
 
             // return 200 flag with uplaoded file ID 
             return new OkObjectResult(newId); 
